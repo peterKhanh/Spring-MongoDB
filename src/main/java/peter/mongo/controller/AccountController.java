@@ -6,51 +6,65 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import peter.mongo.models.Tutorial;
-import peter.mongo.repository.TutorialRepository;
+import peter.mongo.dto.AccountRequest;
+import peter.mongo.dto.ApiResponse;
+import peter.mongo.models.Account;
+import peter.mongo.repository.AccountRepository;
+import peter.mongo.service.AccountService;
 
 @RestController
-@RequestMapping("/api/v1")
-public class TutorialController {
+@RequestMapping("/api/account")
+public class AccountController {
 
 	@Autowired
-	TutorialRepository repo;
+	AccountRepository repo;
+	@Autowired
+	AccountService service;
 
+	
 	@GetMapping("/all")
-	public ResponseEntity<List<Tutorial>> getAllTutorials() {
+	public ResponseEntity<List<Account>> getAllTutorials() {
 		return ResponseEntity.ok(repo.findAll());
 	}
-
-	@PostMapping("/add")
-	public ResponseEntity<Tutorial> createTutorial(@RequestBody Tutorial tutorial) {
-		try {
-			Tutorial _tutorial = repo
-					.insert(new Tutorial(tutorial.getTitle(), tutorial.getDescription(), tutorial.isPublished()));
-			return new ResponseEntity<>(_tutorial, HttpStatus.CREATED);
-		} catch (Exception e) {
-			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-		}
+	@PostMapping("/createAccount")
+	public ApiResponse createAccount(@RequestBody AccountRequest userRequest ){
+		
+		return service.createAccount(userRequest);
 	}
+	
 
 	@GetMapping("/getbyid/{id}")
-	public ResponseEntity<Tutorial> getTutorialById(@PathVariable("id") String id) {
-		Optional<Tutorial> data = repo.findById(id);
+	public ResponseEntity<Account> getTutorialById(@PathVariable("id") String id) {
+		Optional<Account> data = repo.findById(id);
 		if (data.isPresent()) {
 			return new ResponseEntity<>(data.get(), HttpStatus.OK);
 		} else {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
 	}
+	
+	
+	/*
+	 * 
+	 * 
 
+	@GetMapping("/getbyid/{id}")
+	public ResponseEntity<Account> getTutorialById(@PathVariable("id") String id) {
+		Optional<Account> data = repo.findById(id);
+		if (data.isPresent()) {
+			return new ResponseEntity<>(data.get(), HttpStatus.OK);
+		} else {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+	}
+	
 	@DeleteMapping("/deletebyid/{id}")
 	public ResponseEntity<Tutorial> deleteTutorialById(@PathVariable("id") String id) {
 		try {
@@ -93,5 +107,5 @@ public class TutorialController {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
 	}
-
+*/
 }
