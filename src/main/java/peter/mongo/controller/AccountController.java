@@ -9,12 +9,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import peter.mongo.dto.AccountRequest;
 import peter.mongo.dto.ApiResponse;
+import peter.mongo.dto.DepositWithdrawDto;
 import peter.mongo.models.Account;
 import peter.mongo.repository.AccountRepository;
 import peter.mongo.service.AccountService;
@@ -50,6 +52,15 @@ public class AccountController {
 		}
 	}
 	
+	@PostMapping("/deposite")
+	public ApiResponse depositeAccount(@RequestBody DepositWithdrawDto depositWithdrawDto ){
+		return service.depositAccount(depositWithdrawDto);
+	}
+	
+	@PostMapping("/withdraw")
+	public ApiResponse withdrawAccount(@RequestBody DepositWithdrawDto depositWithdrawDto ){
+		return service.withdrawAccount(depositWithdrawDto);
+	}
 	
 	/*
 	 * 
